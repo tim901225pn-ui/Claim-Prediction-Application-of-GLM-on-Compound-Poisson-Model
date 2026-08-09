@@ -42,3 +42,5 @@ To confirm this split is meaningful, we first test for a year effect via a **lik
 
 For the training model itself, `year` is entered as a **numeric** covariate rather than a factor, imposing a linear-trend assumption between years 7 and 8. This is necessary for our purpose, since `year = 9` is unseen during training.
 
+### Model Accuracy
+
