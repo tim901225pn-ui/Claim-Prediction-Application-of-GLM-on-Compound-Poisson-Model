@@ -41,5 +41,3 @@ Since our goal is to predict future risk from historical data, instead of splitt
 To confirm this split is meaningful, we first test for a year effect via a **likelihood-ratio test** (LRT), comparing a model with `year` (as a factor) against one without. This yields statistically significant evidence of a trend in claim frequency over time ($p \approx 1.8 \times 10^{-77}$). Relative to year 7, frequency is estimated to be 3.9% and 8.5% higher in years 8 and 9 respectively.
 
 For the training model itself, `year` is entered as a **numeric** covariate rather than a factor, imposing a linear-trend assumption between years 7 and 8. This is necessary for our purpose, since `year = 9` is unseen during training.
-
-1
