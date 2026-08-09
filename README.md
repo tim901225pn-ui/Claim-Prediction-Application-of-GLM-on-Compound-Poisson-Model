@@ -5,31 +5,31 @@
 Our loss model is described by the **Compound Poisson Model**, which takes the form
 
 $$
-S \mid (\boldsymbol{x}, \nu) = \sum_{n=1}^{N} Y_n, \quad N \mid (\boldsymbol{x}, \nu) \sim \text{Poi}(\lambda(\boldsymbol{x}) \cdot \nu), \quad Y_n \mid \boldsymbol{x} \stackrel{\text{i.i.d.}}{\sim} d(\boldsymbol{x})
+S \mid (\mathbf{\text{x}}, \nu) = \sum_{n=1}^{N} Y_n, \quad N \mid (\mathbf{\text{x}}, \nu) \sim \text{Poi}(\lambda(\mathbf{\text{x}}) \cdot \nu), \quad Y_n \mid \mathbf{\text{x}} \stackrel{\text{i.i.d.}}{\sim} d(\mathbf{\text{x}})
 $$
 
 where:
 
 - $\nu$ — the policy exposure
-- $\boldsymbol{x}$ — the risk factors of the insured
-- $S$ — the aggregate loss given $\boldsymbol{x}$ and $\nu$
+- $\mathbf{\text{x}}$ — the risk factors of the insured
+- $S$ — the aggregate loss given $\mathbf{\text{x}}$ and $\nu$
 - $N$ — the claim count
 - $Y_n$ — the amount of the $n$-th claim
 
-with $N$ assumed independent of $\{Y_n\}_{n \ge 1}$ given $(\boldsymbol{x}, \nu)$.
+with $N$ assumed independent of $\{Y_n\}_{n \ge 1}$ given $(\mathbf{\text{x}}, \nu)$.
 
 ## Modeling the Claim Count $N$ With GLM
 
-We model $N \mid (\boldsymbol{x}, \nu)$ via a Poisson GLM with a log link. The expected claim count is assumed to scale proportionally with exposure $\nu$, i.e.,
+We model $N \mid (\mathbf{\text{x}}, \nu)$ via a Poisson GLM with a log link. The expected claim count is assumed to scale proportionally with exposure $\nu$, i.e.,
 
 $$
-\mathbb{E}[N \mid \boldsymbol{x}, \nu] = \lambda(\boldsymbol{x}) \cdot \nu, \qquad \lambda(\boldsymbol{x}) = \exp(\beta_0 + \beta_1 x_1 + \dots + \beta_p x_p)
+\mathbb{E}[N \mid \mathbf{\text{x}}, \nu] = \lambda(\mathbf{\text{x}}) \cdot \nu, \qquad \lambda(\mathbf{\text{x}}) = \exp(\beta_0 + \beta_1 x_1 + \dots + \beta_p x_p)
 $$
 
-where $\lambda(\boldsymbol{x})$ is the claim frequency per unit exposure given risk factors $\boldsymbol{x}$. Taking logs yields the linear predictor actually fit by the GLM:
+where $\lambda(\mathbf{\text{x}})$ is the claim frequency per unit exposure given risk factors $\mathbf{\text{x}}$. Taking logs yields the linear predictor actually fit by the GLM:
 
 $$
-\log(\mathbb{E}[N \mid \boldsymbol{x}, \nu]) = \log(\nu) + \beta_0 + \beta_1 x_1 + \dots + \beta_p x_p
+\log(\mathbb{E}[N \mid \mathbf{\text{x}}, \nu]) = \log(\nu) + \beta_0 + \beta_1 x_1 + \dots + \beta_p x_p
 $$
 
 with $\log(\nu)$ entered as an **offset**.
