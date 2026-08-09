@@ -16,7 +16,7 @@ where:
 - $N$ — the claim count
 - $Y_n$ — the amount of the $n$-th claim
 
-with $N$ assumed independent of $\{Y_n\}_{n \ge 1}$ given $(\mathbf{x}, \nu)$.
+with $N$ assumed independent of $\\{Y_n\\}_{n \ge 1}$ given $(\mathbf{x}, \nu)$.
 
 ## Modeling the Claim Count $N$ With GLM
 
