@@ -11,7 +11,7 @@ $$
 where:
 
 - $\nu$ — the policy exposure
-- $\mathbf{x}$ — the risk factors of the insured
+- $\textbf{x}$ — the risk factors of the insured
 - $S$ — the aggregate loss given $\mathbf{x}$ and $\nu$
 - $N$ — the claim count
 - $Y_n$ — the amount of the $n$-th claim
