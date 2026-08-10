@@ -18,7 +18,7 @@ where:
 
 with $N$ assumed independent of $\lbrace Y_n\rbrace_{n \ge 1}$ given $(\mathbf{x}, \nu)$.
 
-## Modeling the Claim Count $N$ With GLM
+## Modeling the Claim Count $N$ With Poisson GLM
 
 We model $N \mid (\mathbf{x}, \nu)$ via a Poisson GLM with a log link. The expected claim count is assumed to scale proportionally with exposure $\nu$, i.e.,
 
@@ -45,7 +45,7 @@ For the training model itself, `year` is entered as a **numeric** covariate rath
 ### Model Accuracy
 
 After fitting the model, we would like to assess the model fit. 
-#### **Likelihood-Ratio test**
+#### **Overall Model Significance** (Likelihood-Ratio test)
 This test answers the question, whether the set of risk factors has predictive power. The test is formulated as following
 > - $H_0$: $\beta=\mathbf{0}$. (None of the risk factors has predictive power)
 > - $H_1$: $\beta_i\neq0$ for some $i$. (At least one of the risk factors has predictive power)
@@ -54,7 +54,7 @@ Test statistic:
 $$\Delta D=D_\text{Null}-D_\text{Res}\approx 8,626$$
 Under $H_0$, $\Delta D\sim \chi^2_{\Delta \text{df}}$ (s. Wilks' theorem), where $\Delta \text{df}=1,578,298-1,578,282=16$. The $p$-value is approximately 0. Hence, we **reject** $H_0$. 
 
-#### **Deviance Goodness-of-Fit Test**
+#### **Model Specification** (Deviance Goodness-of-Fit Test)
 This test tells us how well the Poisson GLM specifies our population, from which the data are collected.
 >- $H_0$: The Poisson GLM correctly describes the population.
 >- $H_1$: The Poisson GLM is misspecified.
@@ -65,12 +65,16 @@ $$p\text{-value} = P\left(\chi^2_{1,578,282} \ge 1,052,742\right) \approx 1.0$$
 
 Since $p \ge 0.05$, we **fail to reject $H_0$**, indicating no evidence of structural underfit.
 
-#### **Pearson's Chi-Squared Test**
+#### **Overdispersion** (Pearson's Chi-Squared Test)
 We test whether the data exhibits overdispersion ($\text{Var}(Y) > \mu$), violating the standard Poisson variance assumption ($\phi = 1$):
 > - **$H_0$:** $\phi = 1$ (Equidispersion holds; variance equals the mean).
 > - **$H_1$:** $\phi > 1$ (The data is overdispersed).
 
-We calculate the sum of squared Pearson residuals $X^2 = \sum_{i=1}^N e_i^2$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$ distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{n-p}\approx 2.14$
+We calculate the sum of squared Pearson residuals $X^2 = \sum_{i=1}^n \frac{(y_i-\hat{\mu}_i)^2}{\hat{\mu}_i}$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$ distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{n-p}\approx 2.14$.
+
+Note this apparently conflicts with the Deviance Goodness-of-Fit result above. Both the deviance and Pearson statistics are only asymptotically $\chi^2$-distributed as 
+fitted means $\hat\mu_i$ grow large (not merely as $n$ grows large). We therefore do not treat the GoF test's $p \approx 1$ as reliable evidence of correct specification. The dispersion estimate $\hat{\phi} \approx 2.14$, by contrast, is an estimator that does not rely on this approximation, so we treat it as the more trustworthy diagnostic and conclude that the overdispersion is real.
 
 #### Final Verdict
-In conclusion, our set of risk factors provides predictive power and the Poisson GLM is well specified. However, **Pearson's Chi-Squared Test** shows the evidence of overdispersion. This may be resolved by other modeling approaches, e.g. **negative binomial GLM**. At this point, we don't fit a negative binomial GLM. Instead, we continue with Poisson GLM and move on to modeling the claim severity.
+
+In conclusion, our set of risk factors provides genuine predictive power. The Deviance Goodness-of-Fit test's conclusion of correct specification is not considered reliable here, given the sparsity of the data; the dispersion estimate instead indicates meaningful overdispersion ($\hat\phi \approx 2.14$), meaning Poisson-reported standard errors likely understate the truth by a factor of roughly $\sqrt{\hat\phi}\approx1.46$. This may be resolved by other modeling approaches, e.g. **negative binomial GLM** or **quasi-Poisson**. At this point, we don't refit either — we note this as a limitation and continue with the Poisson GLM, moving on to modeling claim severity.
