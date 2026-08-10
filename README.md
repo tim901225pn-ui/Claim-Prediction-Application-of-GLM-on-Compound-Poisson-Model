@@ -70,7 +70,7 @@ We test whether the data exhibits overdispersion ($\text{Var}(Y) > \mu$), violat
 > - **$H_0$:** $\phi = 1$ (Equidispersion holds; variance equals the mean).
 > - **$H_1$:** $\phi > 1$ (The data is overdispersed).
 
-We calculate the sum of squared Pearson residuals $X^2 = \sum_{i=1}^N e_i^2$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$ distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion.
+We calculate the sum of squared Pearson residuals $X^2 = \sum_{i=1}^N e_i^2$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$ distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{n-p}\approx 2.14$
 
 #### Final Verdict
 In conclusion, our set of risk factors provides predictive power and the Poisson GLM is well specified. However, **Pearson's Chi-Squared Test** shows the evidence of overdispersion. This may be resolved by other modeling approaches, e.g. **negative binomial GLM**. At this point, we don't fit a negative binomial GLM. Instead, we continue with Poisson GLM and move on to modeling the claim severity.
