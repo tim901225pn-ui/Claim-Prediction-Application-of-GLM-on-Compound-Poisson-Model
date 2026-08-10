@@ -18,7 +18,7 @@ where:
 
 with $N$ assumed independent of $\lbrace Y_n\rbrace_{n \ge 1}$ given $(\mathbf{x}, \nu)$.
 
-## ***Modeling Claim Count $N$ With Poisson GLM***
+## ***Modeling Claim Count*** $N$ ***With Poisson GLM***
 
 We model $N \mid (\mathbf{x}, \nu)$ via a Poisson GLM with a log link. The expected claim count is assumed to scale proportionally with exposure $\nu$, i.e.,
 
@@ -79,4 +79,4 @@ fitted means $\hat\mu_i$ grow large (not merely as $n$ grows large). We therefor
 
 In conclusion, our set of risk factors provides genuine predictive power. The Deviance Goodness-of-Fit test's conclusion of correct specification is not considered reliable here, given the sparsity of the data; the dispersion estimate instead indicates meaningful overdispersion ($\hat\phi \approx 2.14$), meaning Poisson-reported standard errors likely understate the truth by a factor of roughly $\sqrt{\hat\phi}\approx1.46$. This may be resolved by other modeling approaches, e.g. **negative binomial GLM** or **quasi-Poisson**. At this point, we don't refit either — we note this as a limitation and continue with the Poisson GLM, moving on to modeling claim severity.
 
-## ***Modeling Claim Severity $Y_n$***
+## ***Modeling Claim Severity*** $Y_n$
