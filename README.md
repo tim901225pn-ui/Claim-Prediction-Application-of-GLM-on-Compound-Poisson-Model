@@ -44,3 +44,33 @@ For the training model itself, `year` is entered as a **numeric** covariate rath
 
 ### Model Accuracy
 
+After fitting the model, we would like to assess the model fit. 
+#### **Likelihood-Ratio test**
+This test answers the question, whether the set of risk factors has predictive power. The test is formulated as following
+> - $H_0$: $\beta=\mathbf{0}$. (None of the risk factors has predictive power)
+> - $H_1$: $\beta_i\neq0$ for some $i$. (At least one of the risk factors has predictive power)
+
+Test statistic:
+$$\Delta D=D_\text{Null}-D_\text{Res}\approx 8,626$$
+Under $H_0$, $\Delta D\sim \chi^2_{\Delta \text{df}}$ (s. Wilks' theorem), where $\Delta \text{df}=1,578,298-1,578,282=16$. The $p$-value is approximately 0. Hence, we **reject** $H_0$. 
+
+#### **Deviance Goodness-of-Fit Test**
+This test tells us how well the Poisson GLM specifies our population, from which the data are collected.
+>- $H_0$: The Poisson GLM correctly describes the population.
+>- $H_1$: The Poisson GLM is misspecified.
+
+Under $H_0$, $D_{\text{Res}} \sim \chi^2_{\text{df}_{\text{residual}}}$. We compute the upper-tail $p$-value:
+
+$$p\text{-value} = P\left(\chi^2_{1,578,282} \ge 1,052,742\right) \approx 1.0$$
+
+Since $p \ge 0.05$, we **fail to reject $H_0$**, indicating no evidence of structural underfit.
+
+#### **Pearson's Chi-Squared Test**
+We test whether the data exhibits overdispersion ($\text{Var}(Y) > \mu$), violating the standard Poisson variance assumption ($\phi = 1$):
+> - **$H_0$:** $\phi = 1$ (Equidispersion holds; variance equals the mean).
+> - **$H_1$:** $\phi > 1$ (The data is overdispersed).
+
+We calculate the sum of squared Pearson residuals $X^2 = \sum_{i=1}^N e_i^2$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$ distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion.
+
+#### Final Verdict
+In conclusion, our set of risk factors provides predictive power and the Poisson GLM is well specified. However, **Pearson's Chi-Squared Test** shows the evidence of overdispersion. This may be resolved by other modeling approaches, e.g. **negative binomial GLM**. At this point, we don't fit a negative binomial GLM. Instead, we continue with Poisson GLM and move on to modeling the claim severity.
