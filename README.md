@@ -86,5 +86,9 @@ In conclusion, our set of risk factors provides genuine predictive power. The De
 > In this section $i$ indexes the rows (policies) and $j$ indexes the individual claims.
 
 Since our data does not include every single claim amount, our gamma GLM is not straightforward anymore. However, given the ***closure of Gamma distribution under summation***, we can adjust the weight of each single row (policy) and fit a gamma GLM. Mathematically, given a risk profile $\mathbf{x}\_i$, we observe its corresponding average severity 
-$$\bar{Y}\_i\mid (N\_i=n\_i, \mathbf{x}\_i) = \frac{1}{n\_i}\sum_{j=1}^{n\_i}Y\_{ij}\sim \Gamma(n\_i\alpha, \frac{\theta(\mathbf{x}\_i)}{n\_i}).$$
+
+$$
+\bar{Y}\_i\mid (N\_i=n\_i, \mathbf{x}\_i) = \frac{1}{n\_i}\sum_{j=1}^{n\_i}Y\_{ij}\sim \Gamma(n\_i\alpha, \frac{\theta(\mathbf{x}\_i)}{n\_i}).
+$$
+
 Furthermore, Gamma distribution is a member of exponential family, thus the variance takes the form $$\text{Var}(\bar{Y}_i)=\frac{\phi \cdot (\alpha \theta(\mathbf{x}_i))^2}{\omega},$$ where $\phi=1/\alpha$ and $\omega=n_i$ given $N_i=n_i$.
