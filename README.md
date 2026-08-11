@@ -5,7 +5,7 @@
 Our loss model is described by the **Compound Poisson Model**, which takes the form
 
 $$
-S \mid (\mathbf{x}, \nu) = \sum_{n=1}^{N} Y_n, \quad N \mid (\mathbf{x}, \nu) \sim \text{Poi}(\lambda(\mathbf{x}) \cdot \nu), \quad Y_n \mid \mathbf{x} \stackrel{\text{i.i.d.}}{\sim} \Gamma(\alpha, \theta(\mathbf{x}))
+S \mid (\mathbf{x}, \nu) = \sum_{i=1}^{N} Y_j, \quad N \mid (\mathbf{x}, \nu) \sim \text{Poi}(\lambda(\mathbf{x}) \cdot \nu), \quad Y_j \mid \mathbf{x} \stackrel{\text{i.i.d.}}{\sim} \Gamma(\alpha, \theta(\mathbf{x}))
 $$
 
 where:
@@ -14,9 +14,9 @@ where:
 - $\mathbf{x}$ — the risk factors of the insured
 - $S$ — the aggregate loss given $\mathbf{x}$ and $\nu$
 - $N$ — the claim count
-- $Y_n$ — the amount of the $n$-th claim
+- $Y_j$ — the amount of the $n$-th claim
 
-with $N$ assumed independent of $\lbrace Y_n\rbrace_{n \ge 1}$ given $(\mathbf{x}, \nu)$.
+with $N$ assumed independent of $\lbrace Y_j\rbrace_{n \ge 1}$ given $(\mathbf{x}, \nu)$.
 
 ## ***Modeling Claim Count*** $N$ ***With Poisson GLM***
 
@@ -79,4 +79,12 @@ fitted means $\hat\mu_i$ grow large (not merely as $n$ grows large). We therefor
 
 In conclusion, our set of risk factors provides genuine predictive power. The Deviance Goodness-of-Fit test's conclusion of correct specification is not considered reliable here, given the sparsity of the data; the dispersion estimate instead indicates meaningful overdispersion ($\hat\phi \approx 2.14$), meaning Poisson-reported standard errors likely understate the truth by a factor of roughly $\sqrt{\hat\phi}\approx1.46$. This may be resolved by other modeling approaches, e.g. **negative binomial GLM** or **quasi-Poisson**. At this point, we don't refit either — we note this as a limitation and continue with the Poisson GLM, moving on to modeling claim severity.
 
-## ***Modeling Claim Severity*** $Y_n$
+## ***Modeling Claim Severity*** $Y_j$
+
+### ***From Individual Claims to Grouped Averages***
+> [!TIP]
+> **Reading Tip**  
+> In this section we use the matrix notation, where $i$ and $j$ stands for the row and column of the data set respectively.
+
+Since our data does not include every single claim amount, our gamma GLM is not straightforward anymore. However, given the ***closure of Gamma distribution under summation***, we can adjust the weight of each single row (policy) and fit a gamma GLM. Mathematicaly, given a risk profile $\mathbf{x}_j$, we observe its corresponding average severity $$\bar{Y}_i\mid (N_i=n, X=\mathbf{x}_i) = \frac{1}{n_i}\sum_{j=1}^{n_i}Y_{ij}\sim \Gamma(n\alpha, \theta(\mathbf{x}_i)/n).$$
+Furthermore, Gamma distribution is a member of exponential family, thus the variance takes the form $$\text{Var}(\bar{Y}_i)=\frac{\phi \cdot b^{\prime\prime}(\theta(\mathbf{x}_i))}{\omega},$$ where $\phi=1/\alpha$ and $\omega=n$ given $N_i=n$.
