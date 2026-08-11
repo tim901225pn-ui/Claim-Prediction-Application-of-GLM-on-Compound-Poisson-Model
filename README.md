@@ -5,7 +5,7 @@
 Our loss model is described by the **Compound Poisson Model**, which takes the form
 
 $$
-S \mid (\mathbf{x}, \nu) = \sum_{i=1}^{N} Y_j, \quad N \mid (\mathbf{x}, \nu) \sim \text{Poi}(\lambda(\mathbf{x}) \cdot \nu), \quad Y_j \mid \mathbf{x} \stackrel{\text{i.i.d.}}{\sim} \Gamma(\alpha, \theta(\mathbf{x}))
+S \mid (\mathbf{x}, \nu) = \sum_{j=1}^{N} Y_j, \quad N \mid (\mathbf{x}, \nu) \sim \text{Poi}(\lambda(\mathbf{x}) \cdot \nu), \quad Y_j \mid \mathbf{x} \stackrel{\text{i.i.d.}}{\sim} \Gamma(\alpha, \theta(\mathbf{x}))
 $$
 
 where:
