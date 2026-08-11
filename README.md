@@ -83,7 +83,6 @@ In conclusion, our set of risk factors provides genuine predictive power. The De
 
 ### ***From Individual Claims to Grouped Averages***
 > [!TIP]
-> **Reading Tip**  
 > In this section we use the matrix notation, where $i$ and $j$ stands for the row and column of the data set respectively.
 
 Since our data does not include every single claim amount, our gamma GLM is not straightforward anymore. However, given the ***closure of Gamma distribution under summation***, we can adjust the weight of each single row (policy) and fit a gamma GLM. Mathematicaly, given a risk profile $\mathbf{x}_j$, we observe its corresponding average severity $$\bar{Y}_i\mid (N_i=n, X=\mathbf{x}_i) = \frac{1}{n_i}\sum_{j=1}^{n_i}Y_{ij}\sim \Gamma(n\alpha, \theta(\mathbf{x}_i)/n).$$
