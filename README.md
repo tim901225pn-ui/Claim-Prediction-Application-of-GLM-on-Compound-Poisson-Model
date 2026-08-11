@@ -93,7 +93,7 @@ We test whether the data exhibits overdispersion ($\text{Var}(Y) > \mu$), violat
 
 We calculate the sum of squared Pearson residuals $X^2=\sum_{i=1}^n\frac{(y\_i-\hat{\mu}\_i)^2}{\hat{\mu}\_i}$, which, as a sum of squared standardized errors, follows a 
 $\chi^2_{\text{df}_{\text{residual}}}$
-distribution under $H\_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{N\_{\text{train}}-p}\approx 1.27$.
+distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{N\_{\text{train}}-p}\approx 1.27$.
 
 Note this apparently conflicts with the Deviance Goodness-of-Fit result above. Both the deviance and Pearson statistics are only asymptotically $\chi^2$-distributed as 
 fitted means $\hat\mu_i$ grow large (not merely as $n$ grows large). We therefore do not treat the GoF test's $p \approx 1$ as reliable evidence of correct specification. The dispersion estimate $\hat{\phi} \approx 1.27$, by contrast, is an estimator that does not rely on this approximation, so we treat it as the more trustworthy diagnostic and conclude that the overdispersion is real.
