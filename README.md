@@ -1,5 +1,26 @@
 # ***Claim Prediction***
 
+## ***The Data***
+
+Before we start modeling, we discuss how we interpret several columns in this dataset. The documentation (see CASdatasets-manual.pdf) uses terms such as "Card Gestionario" and "Card Debitore" without further explanation. We recognize these as referring to Italy's **CARD system** (*Convenzione tra Assicuratori per il Risarcimento Diretto* — the Direct Compensation Convention among Insurers), even though the manual itself does not state this explicitly.
+
+This system creates two distinct roles an insurer can hold on a given claim:
+
+> - **Gestionario**: The insurer of the **not-at-fault** policyholder. The insurer pays its own policyholder directly, then is owed reimbursement from the at-fault driver's insurer.
+> - **Debitore**: The insurer of the **at-fault** policyholder. The insurer owes reimbursement to the insurer who already compensated the victim under their Gestionario role.
+
+The manual describes the column as follows:
+
+> `cost_fcd` Total claim amount for Forfait Card Gestionario (FCD) claims.  
+> `num_fcd` Number of Forfait Card Gestionario (FCD) claims.
+
+This is inconsistent on two levels. First, "Gestionario" refers to the not-at-fault role, yet the abbreviation "FCD" mirrors `cost_cd` — **Card Debitore**, the at-fault role. Second, against the actual data, `euMTPL` does not contain `cost_fcd`/`num_fcd` columns at all. Instead, `cost_fcg` and `num_fcg` are provided. However, unlike `cost_cg`, which can take negative values, `cost_fcg` contains no negative entries. We therefore interpret `cost_fcg`/`num_fcg` in the data as **Forfait Card Debitore** claims.
+
+> [!TIP]
+> From now on, we refer to these columns as `cost_fcd` and `num_fcd` in this document, matching their semantic roles (Debitore) rather than their literal names in the data (`cost_fcg`/`num_fcg`).
+
+Since we are interested in losses caused by our own policyholders, we only consider ``num_fcd``, ``cost_fcd``, ``num_cd`` and ``cost_cd`` in this project.
+
 ## ***Model Assumptions***
 
 Our loss model is described by the **Compound Poisson Model**, which takes the form
@@ -38,7 +59,7 @@ with $\log(\nu)$ entered as an **offset**.
 
 Since our goal is to predict future risk from historical data, instead of splitting the dataset randomly, we split the dataset by year and train the model on years 7–8 and hold out year 9 for model testing.
 
-To confirm this split is meaningful, we first test for a year effect via a **likelihood-ratio test** (LRT), comparing a model with `year` (as a factor) against one without. This yields statistically significant evidence of a trend in claim frequency over time ($p \approx 1.8 \times 10^{-77}$). Relative to year 7, frequency is estimated to be 3.9% and 8.5% higher in years 8 and 9 respectively.
+To confirm this split is meaningful, we first test for a year effect via a **likelihood-ratio test** (LRT), comparing a model with `year` (as a factor) against one without. This yields statistically significant evidence of a trend in claim frequency over time ($p \approx 9.830848\times 10^{-163}$). Relative to year 7, frequency is estimated to be 9% and 17% higher in years 8 and 9 respectively.
 
 For the training model itself, `year` is entered as a **numeric** covariate rather than a factor, imposing a linear-trend assumption between years 7 and 8. This is necessary for our purpose, since `year = 9` is unseen during training.
 
