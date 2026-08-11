@@ -14,9 +14,9 @@ where:
 - $\mathbf{x}$ — the risk factors of the insured
 - $S$ — the aggregate loss given $\mathbf{x}$ and $\nu$
 - $N$ — the claim count
-- $Y_j$ — the amount of the $n$-th claim
+- $Y_j$ — the amount of the $j$-th claim
 
-with $N$ assumed independent of $\lbrace Y_j\rbrace_{n \ge 1}$ given $(\mathbf{x}, \nu)$.
+with $N$ assumed independent of $\lbrace Y_j\rbrace_{j \ge 1}$ given $(\mathbf{x}, \nu)$.
 
 ## ***Modeling Claim Count*** $N$ ***With Poisson GLM***
 
@@ -70,7 +70,7 @@ We test whether the data exhibits overdispersion ($\text{Var}(Y) > \mu$), violat
 > - **$H_0$:** $\phi = 1$ (Equidispersion holds; variance equals the mean).
 > - **$H_1$:** $\phi > 1$ (The data is overdispersed).
 
-We calculate the sum of squared Pearson residuals $X^2=\sum_{i=1}^n\frac{(y\_i-\hat{\mu}\_i)^2}{\hat{\mu}\_i}$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$ distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{n-p}\approx 2.14$.
+We calculate the sum of squared Pearson residuals $X^2=\sum_{i=1}^n\frac{(y\_i-\hat{\mu}\_i)^2}{\hat{\mu}\_i}$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$ distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{N_{\text{train}}-p}\approx 2.14$.
 
 Note this apparently conflicts with the Deviance Goodness-of-Fit result above. Both the deviance and Pearson statistics are only asymptotically $\chi^2$-distributed as 
 fitted means $\hat\mu_i$ grow large (not merely as $n$ grows large). We therefore do not treat the GoF test's $p \approx 1$ as reliable evidence of correct specification. The dispersion estimate $\hat{\phi} \approx 2.14$, by contrast, is an estimator that does not rely on this approximation, so we treat it as the more trustworthy diagnostic and conclude that the overdispersion is real.
@@ -83,7 +83,7 @@ In conclusion, our set of risk factors provides genuine predictive power. The De
 
 ### ***From Individual Claims to Grouped Averages***
 > [!TIP]
-> In this section we use the matrix notation, where $i$ and $j$ stands for the row and column of the data set respectively.
+> In this section $i$ indexes the rows (policies) and $j$ indexes the individual claims.
 
-Since our data does not include every single claim amount, our gamma GLM is not straightforward anymore. However, given the ***closure of Gamma distribution under summation***, we can adjust the weight of each single row (policy) and fit a gamma GLM. Mathematicaly, given a risk profile $\mathbf{x}_j$, we observe its corresponding average severity $$\bar{Y}_i\mid (N_i=n, X=\mathbf{x}_i) = \frac{1}{n_i}\sum_{j=1}^{n_i}Y_{ij}\sim \Gamma(n\alpha, \theta(\mathbf{x}_i)/n).$$
-Furthermore, Gamma distribution is a member of exponential family, thus the variance takes the form $$\text{Var}(\bar{Y}_i)=\frac{\phi \cdot b^{\prime\prime}(\theta(\mathbf{x}_i))}{\omega},$$ where $\phi=1/\alpha$ and $\omega=n$ given $N_i=n$.
+Since our data does not include every single claim amount, our gamma GLM is not straightforward anymore. However, given the ***closure of Gamma distribution under summation***, we can adjust the weight of each single row (policy) and fit a gamma GLM. Mathematically, given a risk profile $\mathbf{x}_i$, we observe its corresponding average severity $$\bar{Y}_i\mid (N_i=n_i, \mathbf{x}_i) = \frac{1}{n_i}\sum_{j=1}^{n_i}Y_{ij}\sim \Gamma(n_i\alpha, \frac{\theta(\mathbf{x}_i)}{n_i}).$$
+Furthermore, Gamma distribution is a member of exponential family, thus the variance takes the form $$\text{Var}(\bar{Y}_i)=\frac{\phi \cdot (\alpha \theta(\mathbf{x}_i))^2}{\omega},$$ where $\phi=1/\alpha$ and $\omega=n_i$ given $N_i=n_i$.
