@@ -16,7 +16,7 @@ The manual describes the column as follows:
 
 This is inconsistent on two levels. First, "Gestionario" refers to the not-at-fault role, yet the abbreviation "FCD" mirrors `cost_cd` — **Card Debitore**, the at-fault role. Second, against the actual data, `euMTPL` does not contain `cost_fcd`/`num_fcd` columns at all. Instead, `cost_fcg` and `num_fcg` are provided. However, unlike `cost_cg`, which can take negative values, `cost_fcg` contains no negative entries. We therefore interpret `cost_fcg`/`num_fcg` in the data as **Forfait Card Debitore** claims.
 
-> [!TIP]
+> [!NOTE]
 > From now on, we refer to these columns as `cost_fcd` and `num_fcd` in this document, matching their semantic roles (Debitore) rather than their literal names in the data (`cost_fcg`/`num_fcg`).
 
 Since we are interested in losses caused by our own policyholders, we only consider ``num_fcd``, ``cost_fcd``, ``num_cd`` and ``cost_cd`` in this project.
@@ -103,7 +103,7 @@ In conclusion, our set of risk factors provides genuine predictive power. The De
 ## ***Modeling Claim Severity*** $Y_j$
 
 ### ***From Individual Claims to Grouped Averages***
-> [!TIP]
+> [!NOTE]
 > In this section $i$ indexes the rows (policies) and $j$ indexes the individual claims.
 
 Since our data does not include every single claim amount, our gamma GLM is not straightforward anymore. However, given the ***closure of Gamma distribution under summation***, we can adjust the weight of each single row (policy) and fit a gamma GLM. Mathematically, given a risk profile $\mathbf{x}\_i$, we observe its corresponding average severity 
