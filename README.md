@@ -21,6 +21,9 @@ This is inconsistent on two levels. First, "Gestionario" refers to the not-at-fa
 
 Since we are interested in losses caused by our own policyholders, we only consider ``num_fcd``, ``cost_fcd``, ``num_cd`` and ``cost_cd`` in this project.
 
+## Preprocessing
+### Collinearity
+### leverage and outliers
 ## ***Model Assumptions***
 
 Our loss model is described by the **Compound Poisson Model**, which takes the form
@@ -75,7 +78,7 @@ Test statistic:
 $$\Delta D=D_\text{Null}-D_\text{Res}\approx 4149$$
 Under $H_0$, $\Delta D\sim \chi^2_{\Delta \text{df}}$ (s. Wilks' theorem), where $\Delta \text{df}=1,578,298-1,578,282=16$. The $p$-value is approximately 0. Hence, we **reject** $H_0$. 
 
-#### ***Model Specification (Deviance Goodness-of-Fit Test)***
+#### ***Model Specification (Deviance Test)***
 This test tells us how well the Poisson GLM specifies our population, from which the data are collected.
 >- $H_0$: The Poisson GLM correctly describes the population.
 >- $H_1$: The Poisson GLM is misspecified.
@@ -86,7 +89,7 @@ $$p\text{-value} = P\left(\chi^2_{1,578,282} \ge 610732\right) \approx 1.0$$
 
 Since $p \ge 0.05$, we **fail to reject $H_0$**, indicating no evidence of structural underfit.
 
-#### ***Overdispersion (Pearson's Chi-Squared Test)***
+#### ***Overdispersion (Pearson Chi-Squared Test)***
 We test whether the data exhibits overdispersion ($\text{Var}(Y) > \mu$), violating the standard Poisson variance assumption ($\phi = 1$):
 > - **$H_0$:** $\phi = 1$ (Equidispersion holds; variance equals the mean).
 > - **$H_1$:** $\phi > 1$ (The data is overdispersed).
@@ -100,7 +103,7 @@ fitted means $\hat\mu_i$ grow large (not merely as $n$ grows large). We therefor
 
 #### ***Final Verdict***
 
-In conclusion, our set of risk factors provides genuine predictive power. The Deviance Goodness-of-Fit test's conclusion of correct specification is not considered reliable here, given the sparsity of the data; the dispersion estimate instead indicates meaningful overdispersion ($\hat\phi \approx 1.27$), meaning Poisson-reported standard errors likely understate the truth by a factor of roughly $\sqrt{\hat\phi}\approx 1.127$. This may be resolved by other modeling approaches, e.g. **negative binomial GLM** or **quasi-Poisson**. At this point, we don't refit either — we note this as a limitation and continue with the Poisson GLM, moving on to modeling claim severity.
+In conclusion, our set of risk factors provides genuine predictive power. The Deviance Goodness-of-Fit test's conclusion of correct specification is not considered reliable here, given the sparsity of the data; the dispersion estimate instead indicates meaningful overdispersion ($\hat\phi \approx 1.27$), meaning Poisson-reported standard errors likely understate the truth by a factor of roughly $\sqrt{\hat\phi}\approx 1.127$. This may be resolved by other modeling approaches, e.g. **negative binomial GLM** or **Zero-Inflated Poisson**. At this point, we don't refit either — we note this as a limitation and continue with the Poisson GLM, moving on to modeling claim severity.
 
 ## ***Modeling Claim Severity*** $Y_j$
 
