@@ -21,9 +21,12 @@ This is inconsistent on two levels. First, "Gestionario" refers to the not-at-fa
 
 Since we are interested in losses caused by our own policyholders, we only consider ``num_fcd``, ``cost_fcd``, ``num_cd`` and ``cost_cd`` in this project.
 
-## Preprocessing
-### Collinearity
-### leverage and outliers
+## ***Preprocessing***
+### ***Collinearity***
+Before fitting, we check pairwise correlation between continuous risk factors: `age` and `horsepower` show negligible correlation $\rho\approx-0.067$). We then fit the full model and compute GVIF for all covariates. `vehicle_category` and `vehicle_use` show extreme collinearity. As a matter of fact, `vehicle_category=1` almost always pairs with `vehicle_use=1`, and `vehicle_category=8` almost always pairs with `vehicle_use=0`, with only a small number of exceptions. We drop `vehicle_category` and refit. All remaining GVIFs return to approximately 1, confirming the collinearity is resolved.
+### ***leverage and outliers***
+We compute leverage and standardized Pearson residuals for the refitted model. Using a threshold of $3p/n$, 42,408 rows (appr. 2.7%) are flagged as high-leverage; 50,823 rows (appr. 3.2%) have standardized residuals exceeding 3 in magnitude. Given the low expected claim counts in this data ($\text{median}(N)=0$, $\text{mean}(N)\approx0.077$), any policy with an actual claim against a near-zero fitted mean mechanically produces a large standardized residual — this is expected behavior for sparse count data rather than necessarily indicating problematic individual points. We do not exclude these rows, but flag this as a limitation of applying standard leverage/outlier thresholds to low-rate count models.
+
 ## ***Model Assumptions***
 
 Our loss model is described by the **Compound Poisson Model**, which takes the form
@@ -76,7 +79,7 @@ This test answers the question, whether the set of risk factors has predictive p
 
 Test statistic:
 $$\Delta D=D_\text{Null}-D_\text{Res}\approx 4149$$
-Under $H_0$, $\Delta D\sim \chi^2_{\Delta \text{df}}$ (s. Wilks' theorem), where $\Delta \text{df}=1,578,298-1,578,282=16$. The $p$-value is approximately 0. Hence, we **reject** $H_0$. 
+Under $H_0$, $\Delta D\sim \chi^2_{\Delta \text{df}}$ (s. Wilks' theorem), where $\Delta \text{df}=1578298-1578283=15$. The $p$-value is approximately 0. Hence, we **reject** $H_0$. 
 
 #### ***Model Specification (Deviance Test)***
 This test tells us how well the Poisson GLM specifies our population, from which the data are collected.
@@ -94,16 +97,13 @@ We test whether the data exhibits overdispersion ($\text{Var}(Y) > \mu$), violat
 > - **$H_0$:** $\phi = 1$ (Equidispersion holds; variance equals the mean).
 > - **$H_1$:** $\phi > 1$ (The data is overdispersed).
 
-We calculate the sum of squared Pearson residuals $X^2=\sum_{i=1}^n\frac{(y\_i-\hat{\mu}\_i)^2}{\hat{\mu}\_i}$, which, as a sum of squared standardized errors, follows a 
-$\chi^2_{\text{df}_{\text{residual}}}$
-distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{N\_{\text{train}}-p}\approx 1.27$.
+We calculate the sum of squared Pearson residuals $X^2=\sum_{i=1}^n\frac{(y\_i-\hat{\mu}\_i)^2}{\hat{\mu}\_i}$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{N\_{\text{train}}-p}\approx 1.27$.
 
-Note this apparently conflicts with the Deviance Goodness-of-Fit result above. Both the deviance and Pearson statistics are only asymptotically $\chi^2$-distributed as 
-fitted means $\hat\mu_i$ grow large (not merely as $n$ grows large). We therefore do not treat the GoF test's $p \approx 1$ as reliable evidence of correct specification. The dispersion estimate $\hat{\phi} \approx 1.27$, by contrast, is an estimator that does not rely on this approximation, so we treat it as the more trustworthy diagnostic and conclude that the overdispersion is real.
+Note this apparently conflicts with the Deviance Goodness-of-Fit result above. Both the deviance and Pearson statistics are only asymptotically $\chi^2$-distributed as fitted means $\hat\mu_i$ grow large (not merely as $n$ grows large). We therefore do not treat the GoF test's $p \approx 1$ as reliable evidence of correct specification. The dispersion estimate $\hat{\phi} \approx 1.27$, by contrast, is an estimator that does not rely on this approximation, so we treat it as the more trustworthy diagnostic and conclude that the overdispersion is real.
 
 #### ***Final Verdict***
 
-In conclusion, our set of risk factors provides genuine predictive power. The Deviance Goodness-of-Fit test's conclusion of correct specification is not considered reliable here, given the sparsity of the data; the dispersion estimate instead indicates meaningful overdispersion ($\hat\phi \approx 1.27$), meaning Poisson-reported standard errors likely understate the truth by a factor of roughly $\sqrt{\hat\phi}\approx 1.127$. This may be resolved by other modeling approaches, e.g. **negative binomial GLM** or **Zero-Inflated Poisson**. At this point, we don't refit either — we note this as a limitation and continue with the Poisson GLM, moving on to modeling claim severity.
+In conclusion, our set of risk factors provides genuine predictive power. The Deviance Goodness-of-Fit test's conclusion of correct specification is not considered reliable here, given the sparsity of the data; the dispersion estimate instead indicates meaningful overdispersion ($\hat\phi \approx 1.27$), meaning Poisson-reported standard errors likely understate the truth by a factor of roughly $\sqrt{\hat\phi}\approx 1.127$. This may be resolved by other modeling approaches, e.g. **negative binomial GLM** or **Quasi-Poisson**. At this point, we don't refit either — we note this as a limitation and continue with the Poisson GLM, moving on to modeling claim severity.
 
 ## ***Modeling Claim Severity*** $Y_j$
 
@@ -118,3 +118,18 @@ $$
 $$
 
 Furthermore, Gamma distribution is a member of exponential family, thus the variance takes the form $$\text{Var}(\bar{Y}_i)=\frac{\phi \cdot (\alpha \theta(\mathbf{x}_i))^2}{\omega},$$ where $\phi=1/\alpha$ and $\omega=n_i$ given $N_i=n_i$.
+### ***Fitting the Gamma GLM***
+As with the frequency model, `vehicle_category` is dropped due to severe collinearity with `vehicle_use` (GVIF > 200); after dropping, all GVIFs are close to 1.
+
+**Coefficient interpretation** (fitted on years 7–8, weighted by `num`): `year` shows at-fault severity **decreasing** by about 12% year-over-year ($\exp(-0.128)\approx0.88$) — notably the opposite direction from claim frequency, which was *increasing* over the same period. `age` and `horsepower` are both negative and significant, suggesting (association only, not causal) that older policyholders and higher-horsepower vehicles are linked to lower average at-fault severity. Several `fuel_type` and `vehicle_use` levels are imprecisely estimated (large standard errors relative to their estimates), plausibly reflecting small subgroup sizes.
+
+### Dispersion and Model Adequacy
+
+The fitted dispersion is $\hat\phi\approx0.37$, giving $\hat\alpha=1/\hat\phi\approx2.70$. In terms of the fitted severity distribution, this implies a coefficient of variation of $\sqrt{\hat\phi}\approx0.61$ and a skewness of $2\sqrt{\hat\phi}\approx1.22$.
+
+We assess model adequacy via two QQ-plot diagnostics. First, standardized deviance residuals ($r_D/\sqrt{\hat\phi}$) are approximately normal only as $\hat\phi\to0$ 
+(Pierce & Schafer, 1986). However, $\hat\alpha\approx2.70$ indicates a possibly weak result. To improve these, we compute **randomized quantile residuals**, which are exactly standard normal under a correctly specified model regardless of $\hat\phi$.
+
+Both plots show almost identical results, while the left tail and center align well with the diagonal, the right tail is much heavier than the underlying assumptions suggest. Since the quantile-residual method requires no small-$\hat\phi$ assumption, this rules out "insufficiently small $\hat\phi$" as the explanation, and indicates a genuine specification issue: **the Gamma distribution's tail is too light** to capture the largest at-fault claim severities in this portfolio.
+
+We do not refit with an alternative distribution here, but note **inverse Gaussian** as an extension to try, with lognormal, Tweedie as further options.
