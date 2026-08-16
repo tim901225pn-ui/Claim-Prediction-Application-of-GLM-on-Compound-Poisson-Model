@@ -127,8 +127,7 @@ As with the frequency model, `vehicle_category` is dropped due to severe colline
 
 The fitted dispersion is $\hat\phi\approx0.37$, giving $\hat\alpha=1/\hat\phi\approx2.70$. In terms of the fitted severity distribution, this implies a coefficient of variation of $\sqrt{\hat\phi}\approx0.61$ and a skewness of $2\sqrt{\hat\phi}\approx1.22$.
 
-We assess model adequacy via two QQ-plot diagnostics. First, standardized deviance residuals ($r_D/\sqrt{\hat\phi}$) are approximately normal only as $\hat\phi\to0$ 
-(Pierce & Schafer, 1986). However, $\hat\alpha\approx2.70$ indicates a possibly weak result. To improve these, we compute **randomized quantile residuals**, which are exactly standard normal under a correctly specified model regardless of $\hat\phi$.
+We assess model adequacy via two QQ-plot diagnostics. First, standardized deviance residuals ($r_D/\sqrt{\hat\phi}$) are approximately normal only as $\hat\phi\to0$. However, $\hat\alpha\approx2.70$ indicates a possibly weak result. To improve these, we compute **randomized quantile residuals**, which are exactly standard normal under a correctly specified model regardless of $\hat\phi$.
 
 Both plots show almost identical results, while the left tail and center align well with the diagonal, the right tail is much heavier than the underlying assumptions suggest. Since the quantile-residual method requires no small-$\hat\phi$ assumption, this rules out "insufficiently small $\hat\phi$" as the explanation, and indicates a genuine specification issue: **the Gamma distribution's tail is too light** to capture the largest at-fault claim severities in this portfolio.
 
