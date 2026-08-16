@@ -36,7 +36,7 @@ Both models are trained on years 7–8 and validated against held-out year 9, wi
 
 **New to this project? Start here:**
 - Want the math behind the models? → [`docs/methodology.md`](docs/methodology.md)
-- Want to see how well the models actually fit? → [`docs/RESULT.ipynb`](docs/RESULT.ipynb)
+- Want to see how well the models actually fit? → [`notebooks/RESULT.ipynb`](notebooks/RESULT.ipynb)
 
 ## Data
 
