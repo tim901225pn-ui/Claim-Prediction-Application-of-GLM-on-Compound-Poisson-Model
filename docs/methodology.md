@@ -2,7 +2,7 @@
 
 ## ***The Data***
 
-Before we start modeling, we discuss how we interpret several columns in this dataset. The documentation (see CASdatasets-manual.pdf) uses terms such as "Card Gestionario" and "Card Debitore" without further explanation. We recognize these as referring to Italy's **CARD system** (*Convenzione tra Assicuratori per il Risarcimento Diretto* — the Direct Compensation Convention among Insurers), even though the manual itself does not state this explicitly.
+Before we start modeling, we discuss how we interpret several columns in this dataset. The documentation (see [CASdatasets](http://cas.uqam.ca/)) uses terms such as "Card Gestionario" and "Card Debitore" without further explanation. We recognize these as referring to Italy's **CARD system** (*Convenzione tra Assicuratori per il Risarcimento Diretto* — the Direct Compensation Convention among Insurers), even though the manual itself does not state this explicitly.
 
 This system creates two distinct roles an insurer can hold on a given claim:
 
