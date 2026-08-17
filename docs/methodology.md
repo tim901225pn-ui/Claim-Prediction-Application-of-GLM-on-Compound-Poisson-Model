@@ -86,9 +86,9 @@ This test tells us how well the Poisson GLM specifies our population, from which
 >- $H_0$: The Poisson GLM correctly describes the population.
 >- $H_1$: The Poisson GLM is misspecified.
 
-Under $H\_0$, $D_{\text{Res}} \sim \chi^2_{\text{df}_{\text{residual}}}$.
+Under $H\_0$, $D\_{\text{Res}} \sim \chi^2\_{\text{df}\_{\text{residual}}}$.
 We compute the upper-tail $p$-value:
-$$p\text{-value} = P\left(\chi^2_{1,578,283} \ge 610732\right) \approx 1.0$$
+$$p\text{-value} = P\left(\chi^2\_{1,578,283} \ge 610732\right) \approx 1.0$$
 
 Since $p \ge 0.05$, we **fail to reject $H_0$**, indicating no evidence of structural underfit.
 
@@ -97,7 +97,7 @@ We test whether the data exhibits overdispersion ($\text{Var}(Y) > \mu$), violat
 > - **$H_0$:** $\phi = 1$ (Equidispersion holds).
 > - **$H_1$:** $\phi > 1$ (The data is overdispersed).
 
-We calculate the sum of squared Pearson residuals $X^2=\sum_{i=1}^n\frac{(y\_i-\hat{\mu}\_i)^2}{\hat{\mu}\_i}$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{N\_{\text{train}}-p}\approx 1.27$.
+We calculate the sum of squared Pearson residuals $X^2=\sum_{i=1}^n\frac{(y\_i-\hat{\mu}\_i)^2}{\hat{\mu}\_i}$, which, as a sum of squared standardized errors, follows a $\chi^2\_{\text{df}\_{\text{residual}}}$distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{N\_{\text{train}}-p}\approx 1.27$.
 
 Note this apparently conflicts with the Deviance Goodness-of-Fit result above. Both the deviance and Pearson statistics are only asymptotically $\chi^2$-distributed as fitted means $\hat\mu_i$ grow large (not merely as $n$ grows large). We therefore do not treat the GoF test's $p \approx 1$ as reliable evidence of correct specification. The dispersion estimate $\hat{\phi} \approx 1.27$, by contrast, is an estimator that does not rely on this approximation, so we treat it as the more trustworthy diagnostic and conclude that the overdispersion is real.
 
@@ -129,6 +129,6 @@ The fitted dispersion is $\hat\phi\approx0.37$, giving $\hat\alpha=1/\hat\phi\ap
 
 We assess model adequacy via two QQ-plot diagnostics. First, standardized deviance residuals ($r_D/\sqrt{\hat\phi}$) are approximately normal only as $\hat\phi\to0$. However, $\hat\alpha\approx2.70$ indicates a possibly weak result. To improve these, we compute **randomized quantile residuals**, which are exactly standard normal under a correctly specified model regardless of $\hat\phi$.
 
-Both plots show almost identical results, while the left tail and center align well with the diagonal, the right tail is much heavier than the underlying assumptions suggest. Since the quantile-residual method requires no small-$\hat\phi$ assumption, this rules out "insufficiently small $\hat\phi$" as the explanation, and indicates a genuine specification issue: **the Gamma distribution's tail is too light** to capture the largest at-fault claim severities in this portfolio.
+Both plots show almost identical results, while the left tail and center align well with the diagonal, the right tail is much heavier than the underlying assumptions suggest. Since the quantile-residual method requires no small-$\hat\phi$ assumption, this rules out "insufficiently small $\hat{\phi}$" as the explanation, and indicates a genuine specification issue: **the Gamma distribution's tail is too light** to capture the largest at-fault claim severities in this portfolio.
 
 We do not refit with an alternative distribution here, but note **inverse Gaussian** as an extension to try, with lognormal, Tweedie as further options.
