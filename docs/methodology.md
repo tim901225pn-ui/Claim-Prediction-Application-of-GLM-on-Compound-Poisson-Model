@@ -86,7 +86,7 @@ This test tells us how well the Poisson GLM specifies our population, from which
 >- $H_0$: The Poisson GLM correctly describes the population.
 >- $H_1$: The Poisson GLM is misspecified.
 
-Under $H_0$, $D_{\text{Res}} \sim \chi^2_{\text{df}_{\text{residual}}}$.
+Under $H\_0$, $D\_{\text{Res}} \sim \chi^2\_{\text{df}\_{\text{residual}}}$.
 We compute the upper-tail $p$-value:
 $$p\text{-value} = P\left(\chi^2_{1,578,283} \ge 610732\right) \approx 1.0$$
 
