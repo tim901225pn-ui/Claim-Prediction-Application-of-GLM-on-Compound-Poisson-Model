@@ -50,7 +50,7 @@ with $N$ assumed independent of $\lbrace Y_j\rbrace_{j \ge 1}$ given $(\mathbf{x
 We model $N \mid (\mathbf{x}, \nu)$ via a Poisson GLM with a log link. The expected claim count is assumed to scale proportionally with exposure $\nu$, i.e.,
 
 $$
-\mathbb{E}[N \mid \mathbf{x}, \nu] = \lambda(\mathbf{x}) \cdot \nu, \qquad \lambda(\mathbf{x}) = \exp(\beta_0 + \beta_1 x_1 + \dots + \beta_p x_p)
+\mathbb{E}[N \mid \mathbf{x}, \nu] =\nu \cdot \lambda(\mathbf{x}) , \qquad \lambda(\mathbf{x}) = \exp(\beta_0 + \beta_1 x_1 + \dots + \beta_p x_p)
 $$
 
 where $\lambda(\mathbf{x})$ is the claim frequency per unit exposure given risk factors $\mathbf{x}$. Taking logs yields the linear predictor actually fit by the GLM:
@@ -93,7 +93,7 @@ Since $p \ge 0.05$, we **fail to reject $H_0$**, indicating no evidence of struc
 
 #### ***Overdispersion (Pearson Chi-Squared Test)***
 We test whether the data exhibits overdispersion ($\text{Var}(Y) > \mu$), violating the standard Poisson variance assumption ($\phi = 1$):
-> - **$H_0$:** $\phi = 1$ (Equidispersion holds; variance equals the mean).
+> - **$H_0$:** $\phi = 1$ (Equidispersion holds).
 > - **$H_1$:** $\phi > 1$ (The data is overdispersed).
 
 We calculate the sum of squared Pearson residuals $X^2=\sum_{i=1}^n\frac{(y\_i-\hat{\mu}\_i)^2}{\hat{\mu}\_i}$, which, as a sum of squared standardized errors, follows a $\chi^2_{\text{df}_{\text{residual}}}$distribution under $H_0$. Computing the upper-tail $p$-value yields $p\text{-value} \approx 0.0$. This is a strong statistical evidence of overdispersion. In particular, our estimate of dispersion parameter $\phi$ is $\hat{\phi}=\frac{X^2}{N\_{\text{train}}-p}\approx 1.27$.
